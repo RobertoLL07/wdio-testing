@@ -1,0 +1,28 @@
+describe('E2E Tests - Pay', () => {
+    it('Should log into application', async () => {
+        await browser.url('http://zero.webappsecurity.com/index.html')
+        await $('#signin_button').waitForExist()
+        $('#signin_button').click()
+        await $('#login_form').waitForExist()
+        await $('#user_login').setValue('username')
+        await $('#user_password').setValue('password')
+        await $('input[type="submit"]').click() 
+        await $('.nav-tabs').waitForExist()
+    })
+
+    it('Should make payment', async () => {
+		await $('#pay_bills_tab').click()
+		const selectPayee = await $('#sp_payee')
+		await selectPayee.waitForExist()
+		await selectPayee.selectByAttribute('value', 'apple')
+		const selectAccount = await $('#sp_account')
+		await selectAccount.waitForExist()
+		await selectAccount.selectByVisibleText('Loan')
+		await $('#sp_amount').setValue('500')
+		await $('#sp_date').setValue('2020-03-31')
+		await $('#sp_description').setValue('Test')
+		await $('#pay_saved_payees').click()
+		const message = await $('#alert_content')
+		await expect(message).toHaveText('The payment was successfully submitted.')
+	})
+})
